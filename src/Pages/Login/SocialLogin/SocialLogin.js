@@ -6,18 +6,21 @@ import { AiFillGithub } from 'react-icons/ai';
 import { useSignInWithGithub, useSignInWithGoogle } from 'react-firebase-hooks/auth';
 import auth from '../../../firebase.init';
 import { useNavigate } from 'react-router-dom';
+import Loading from '../../Shared/Loading/Loading';
 
 
 const SocialLogin = () => {
     const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
-    const [signInWithGithub, userGithub, loadingGithub, errorGithub] = useSignInWithGithub(auth);
+    const [signInWithGithub, userGithub, githubLoading, errorGithub] = useSignInWithGithub(auth);
     const navigate = useNavigate();
     let errorElement;
 
     if (error || errorGithub) {
         errorElement = <p className='text-danger'>Error: {error?.message} {errorGithub?.message}</p>
 
-
+    }
+    if (loading || githubLoading) {
+        return <Loading></Loading>
     }
 
     if (user || userGithub) {
