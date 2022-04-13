@@ -3,25 +3,26 @@ import google from '../../../images/social/google.png';
 import { FcGoogle } from 'react-icons/fc';
 import { MdFacebook } from 'react-icons/md';
 import { AiFillGithub } from 'react-icons/ai';
-import { useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import { useSignInWithGithub, useSignInWithGoogle } from 'react-firebase-hooks/auth';
 import auth from '../../../firebase.init';
 import { useNavigate } from 'react-router-dom';
 
 
 const SocialLogin = () => {
     const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
+    const [signInWithGithub, userGithub, loadingGithub, errorGithub] = useSignInWithGithub(auth);
     const navigate = useNavigate();
     let errorElement;
 
-    if (error) {
+    if (error || errorGithub) {
         errorElement =
             (<div>
-                <p className='text-danger'>Error: {error.message}</p>
+                <p className='text-danger'>Error: {error?.message} {errorGithub?.message}</p>
             </div>)
 
     }
 
-    if (user) {
+    if (user || userGithub) {
         navigate('/home');
     }
 
@@ -42,7 +43,7 @@ const SocialLogin = () => {
                     <MdFacebook></MdFacebook>
                     <span className='px-2'> Facebook Sign In</span>
                 </button>
-                <button className='btn btn-outline-primary btn-lg d-flex align-items-center w-50 mx-auto'>
+                <button onClick={() => signInWithGithub()} className='btn btn-outline-primary btn-lg d-flex align-items-center w-50 mx-auto'>
                     <AiFillGithub></AiFillGithub>
                     <span className='px-2'> Github Sign In</span>
                 </button>
